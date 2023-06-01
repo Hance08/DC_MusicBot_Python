@@ -42,4 +42,32 @@ class YTDSource(discord.PCMVolumeTransformer):
         filename = data['title'] if stream else ytdl.prepare_filename(data)
         return filename
 
+class Music_Player(commands.Cog):
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
     
+    @commands.hybrid_command(name= 'play', with_app_command= True)
+    async def play(self, ctx: commands.Context, *, song: str):
+        if ctx.message.author.voice:
+            music_bot = ctx.message.author.voice.channel
+            await music_bot.connect()
+            await ctx.send('機器人成功加入語音頻道 !')
+        else:
+            await ctx.send("你尚未在任何語音頻道 !")
+        
+        if(ctx.voice_client):
+            server = ctx.message.guild
+            music_bot = server.voice_client
+            filename = await YTDSource.from_url(song)
+            music_bot.play(discord.FFmpegPCMAudio(executable= r'C:\FFmpeg\ffmpeg.exe'), source= filename)
+            await ctx.send("--現在正在播放音樂--")
+        else:
+            await ctx.send("機器人尚未在任何語音頻道 !")
+        
+        while (True):
+            if not music_bot.is_paused():
+                if not music_bot.is_playing():                
+                    break
+            await asyncio.sleep(1)
+    
+        await music_bot.disconnect()
