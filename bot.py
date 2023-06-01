@@ -10,7 +10,7 @@ bot = commands.Bot(command_prefix= '/' , intents= intents)
 async def on_ready():
     slash = await bot.tree.sync()
     print(f'Now user --> {bot.user} !')
-    print(f'{len(slash)} can be used !')
+    print(f'{len(slash)} slash commands can be used !')
 
 async def load_extensions():
     for filename in os.listdir('./cogs'):
@@ -19,6 +19,7 @@ async def load_extensions():
 
 async def main():
     async with bot:
+        await load_extensions()
         await bot.start('MTExMjU0MTg5MDU1OTA5ODk3MA.Gt8LpT.dawktOaj2BmeTI88o-olDHnKWS0RT4i70Rb6RY')
 
 asyncio.run(main())
