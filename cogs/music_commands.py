@@ -53,16 +53,16 @@ class Music_Player(commands.Cog):
             await music_bot.connect()
             await ctx.send('機器人成功加入語音頻道 !')
         else:
-            await ctx.send("你尚未在任何語音頻道 !")
+            await ctx.send('你尚未在任何語音頻道 !')
         
         if(ctx.voice_client):
             server = ctx.message.guild
             music_bot = server.voice_client
             filename = await YTDSource.from_url(song)
             music_bot.play(discord.FFmpegPCMAudio(executable= r'C:\FFmpeg\ffmpeg.exe'), source= filename)
-            await ctx.send("--現在正在播放音樂--")
+            await ctx.send('--現在正在播放音樂--')
         else:
-            await ctx.send("機器人尚未在任何語音頻道 !")
+            await ctx.send('機器人尚未在任何語音頻道 !')
         
         while (True):
             if not music_bot.is_paused():
@@ -71,3 +71,11 @@ class Music_Player(commands.Cog):
             await asyncio.sleep(1)
     
         await music_bot.disconnect()
+
+    @commands.hybrid_command(name= 'leave', with_app_command= True)
+    async def leave(self, ctx: commands.Context):
+        if(ctx.voice_client):
+           await ctx.guild.voice_client.disconnect()
+           await ctx.send('機器人已離開語音頻道 !')
+        else:
+            await ctx.send('機器人不再語音頻道裡 !')
