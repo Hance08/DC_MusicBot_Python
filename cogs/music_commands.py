@@ -79,3 +79,10 @@ class Music_Player(commands.Cog):
            await ctx.send('機器人已離開語音頻道 !')
         else:
             await ctx.send('機器人不再語音頻道裡 !')
+    
+    @commands.hybrid_command(name= 'pasue', with_app_command= True)
+    async def pause(self, ctx: commands.Context):
+        music = ctx.voice_client        
+        await music.pause()
+        await ctx.send('音樂已暫停 !')
+    
