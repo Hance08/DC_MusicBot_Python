@@ -86,3 +86,8 @@ class Music_Player(commands.Cog):
         await music.pause()
         await ctx.send('音樂已暫停 !')
     
+    @commands.hybrid_command(name='resume' , with_app_command=True)
+    async def resume(self, ctx: commands.Context):
+        music = ctx.voice_client
+        await music.resume()
+        await ctx.send("音樂繼續播放 !") 
