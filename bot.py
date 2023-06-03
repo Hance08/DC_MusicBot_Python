@@ -13,9 +13,9 @@ async def on_ready():
     print(f'{len(slash)} slash commands can be used !')
 
 async def load_extensions():
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('./py'):
-            await bot.load_extension(f'cogs.{filename[:-3]}')                
+    for filename in os.listdir("./cogs"):
+        if filename.endswith(".py"):
+            await bot.load_extension(f"cogs.{filename[:-3]}")                
 
 async def main():
     async with bot:

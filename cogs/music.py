@@ -17,61 +17,60 @@ ytdl_format_options = {
     'quiet': True,
     'no_warnings': True,
     'default_search': 'auto',
-    'source_address': '0.0.0.0'
+    'source_address': '0.0.0.0' 
 }
 
 ffmpeg_options = {
-    'options' : '-vn'
+    'options': '-vn'
 }
 
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
 class YTDSource(discord.PCMVolumeTransformer):
-    def __init__(self, source, *, data, volume= 0.5):
+    def __init__(self, source, *, data, volume=0.5):
         super().__init__(source, volume)
         self.data = data
         self.title = data.get('title')
-        self.url = ''
-        
+        self.url = ""
+
     @classmethod
-    async def from_url(cls, url, *, loop= None, stream= None):
+    async def from_url(cls, url, *, loop=None, stream=False):
         loop = loop or asyncio.get_event_loop()
         data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
-        if 'entries' in data:
+        if 'entries' in data:            
             data = data['entries'][0]
-        filename = data['title'] if stream else ytdl.prepare_filename(data)
+        filename = data['title'] if stream else ytdl.prepare_filename(data)        
         return filename
 
 class Music_Player(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot):
         self.bot = bot
     
-    @commands.hybrid_command(name= 'play', with_app_command= True)
-    async def play(self, ctx: commands.Context, *, song: str):
+    @commands.hybrid_command(name="play" , with_app_command=True)
+    async def play(self , ctx: commands.Context , *, query: str):
         if ctx.message.author.voice:
-            music_bot = ctx.message.author.voice.channel
-            await music_bot.connect()
-            await ctx.send('機器人成功加入語音頻道 !')
+            music_channel = ctx.message.author.voice.channel
+            await music_channel.connect()
+            await ctx.send("機器人成功加入語音頻道 !")
         else:
-            await ctx.send('你尚未在任何語音頻道 !')
-        
-        if(ctx.voice_client):
+            await ctx.send("你尚未在任何語音頻道 !")
+        try:   
             server = ctx.message.guild
-            music_bot = server.voice_client
-            filename = await YTDSource.from_url(song)
-            music_bot.play(discord.FFmpegPCMAudio(executable= r'C:\FFmpeg\ffmpeg.exe'), source= filename)
-            await ctx.send('--現在正在播放音樂--')
-        else:
-            await ctx.send('機器人尚未在任何語音頻道 !')
+            music = server.voice_client            
+            filename = await YTDSource.from_url(query)
+            music.play(discord.FFmpegPCMAudio(executable=r"C:\FFmpeg\ffmpeg.exe" , source = filename))
+            await ctx.send("--現在正在播放音樂--")
+        except:
+            await ctx.send("機器人尚未在任何語音頻道 !")
         
         while (True):
-            if not music_bot.is_paused():
-                if not music_bot.is_playing():                
+            if not music.is_paused():
+                if not music.is_playing():                
                     break
             await asyncio.sleep(1)
     
-        await music_bot.disconnect()
-
+        await music.disconnect()
+        
     @commands.hybrid_command(name= 'leave', with_app_command= True)
     async def leave(self, ctx: commands.Context):
         if(ctx.voice_client):
@@ -92,5 +91,5 @@ class Music_Player(commands.Cog):
         await music.resume()
         await ctx.send("音樂繼續播放 !")
         
-async def setup(bot: commands.Bot):
+async def setup(bot):
     await bot.add_cog(Music_Player(bot))
