@@ -17,7 +17,7 @@ async def load_extensions():
         if filename.endswith(".py"):
             await bot.load_extension(f"cogs.{filename[:-3]}")                
 
-#ccc
+
 async def main():
     async with bot:
         await load_extensions()
