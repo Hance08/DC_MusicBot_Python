@@ -8,8 +8,8 @@ bot = commands.Bot(command_prefix= '/' , intents= intents) # 創建一個 Bot �
 
 @bot.event
 async def on_ready():
-    slash = await bot.tree.sync()
-    print(f'Now user --> {bot.user} !')
+    slash = await bot.tree.sync() #同步機器人的斜線命令的方法
+    print(f'Now user --> {bot.user} !') 
     print(f'{len(slash)} slash commands can be used !')
 
 async def load_extensions():
