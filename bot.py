@@ -21,6 +21,6 @@ async def load_extensions():
 async def main():
     async with bot:  # 使用 Bot 實例建立異步上下文
         await load_extensions() # 載入擴展（extension）
-        await bot.start('MTExMjU0MTg5MDU1OTA5ODk3MA.Gt8LpT.dawktOaj2BmeTI88o-olDHnKWS0RT4i70Rb6RY') # 開始 Bot 的運行
+        await bot.start('Token') # 開始 Bot 的運行
 
 asyncio.run(main()) # 執行 main 函式的異步運行
